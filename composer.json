@@ -1,0 +1,38 @@
+{
+    "name": "edgrosvenor/laravelizer",
+    "description": "Create Laravel models, migrations, and factories for an existing MySQL database",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Ed Grosvenor",
+            "email": "ed.grosvenor@wickedviral.com"
+        }
+    ],
+    "require": {
+        "php": "^7.2",
+        "illuminate/support": "^6.0",
+        "illuminate/console": "^6.0",
+        "illuminate/filesystem": "^6.0",
+        "doctrine/dbal": "^2.10"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^4.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Laravelizer\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/",
+            "App\\": "vendor/orchestra/testbench-core/laravel/app"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": "Laravelizer\\LaravelizerServiceProvider"
+        }
+    }
+}
