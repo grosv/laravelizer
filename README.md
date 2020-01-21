@@ -25,7 +25,6 @@ php artisan laravelize:table {table_name} {connection?}
 `--explain` Just tells you what the operation would create and where if you were to actually run it.
 
 ## Contributing
-This package is tested against [a sample database referenced in the MySQL documentation](https://github.com/datacharmer/test_db) so grab that and use it for the default connection when you are working locally and testing this package.
 
 
 
