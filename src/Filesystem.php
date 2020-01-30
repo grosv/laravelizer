@@ -6,11 +6,18 @@ namespace Laravelizer\Actions;
 
 use Illuminate\Support\Facades\File;
 
-class Write
+class Filesystem
 {
-    public function construct()
+    public function write($path, $contents): void
     {
+        $path = substr($path, 0, strrpos( $path, '/'));
+        $this->ensureDirectoryExists($path);
+        File::put($path, $contents);
+    }
 
+    public function read($path): string
+    {
+        return File::get($path);
     }
 
     public function ensureDirectoryExists($path): void
