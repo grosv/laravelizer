@@ -2,7 +2,10 @@
 
 namespace Laravelizer;
 
+use Doctrine\DBAL\Types\Type;
 use Illuminate\Support\Facades\DB;
+use Laravelizer\Types\EnumType;
+use Laravelizer\Types\GeometryType;
 
 class Database
 {
@@ -11,8 +14,9 @@ class Database
     public function __construct($connection)
     {
         $this->connection = $connection;
-        DB::connection($this->connection)->getDoctrineSchemaManager()->getDatabasePlatform()->registerDoctrineTypeMapping('enum', 'string');
-        DB::connection($this->connection)->getDoctrineSchemaManager()->getDatabasePlatform()->registerDoctrineTypeMapping('geometry', 'string');
+
+        DB::connection()->getDoctrineSchemaManager()->getDatabasePlatform()->registerDoctrineTypeMapping('enum', 'customEnum');
+        DB::connection()->getDoctrineSchemaManager()->getDatabasePlatform()->registerDoctrineTypeMapping('geometry', 'customGeometry');
     }
 
     public function getTables()

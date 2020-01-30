@@ -3,34 +3,40 @@
 namespace Laravelizer\Command;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
-use Laravelizer\Actions\Autopilot;
 use Laravelizer\Database;
 
 class Laravelize extends Command
 {
 
-    protected $signature = 'laravelize:table
-                            {table}
-                            {connection?}
+    protected $signature = 'laravelize
+                            {table=___*___}
+                            {--connection=}
                             {--force}
-                            {--silent}
     ';
 
     protected $tables = [];
     protected $class_name;
     protected $components = ['migration', 'model', 'factory', 'nova', 'test'];
+    protected $connection;
+    protected $force;
+    protected $written;
 
 
     public function __construct()
     {
         parent::__construct();
+        $this->written = collect([]);
+
     }
 
     public function handle()
     {
-        $this->tables = $this->argument('table') === '*' ? $this->getAllTableNames() : [$this->argument('table')];
+
+        $this->connection = $this->hasOption('connection') && !empty($this->option('connection')) ? $this->option('connection') : config('database.default');
+        $this->force = $this->hasOption('force') && !empty($this->option('force'));
+        $this->tables = $this->argument('table') === '___*___' ? $this->getAllTableNames() : [$this->argument('table')];
+
 
         foreach ($this->tables as $table) {
             $this->laravelize($table);
@@ -39,39 +45,29 @@ class Laravelize extends Command
 
     public function laravelize($table)
     {
+        $this->class_name = $this->ask('What do you want to call the model we are creating from table ' . $table . '?', Str::singular(Str::studly($table)));
         foreach ($this->components as $component) {
-            if (config('laravelize.'.$component.'.suppress')) {
-                $this->line('<fg-color:yellow>Skipping ' . $component . '</fg-color> - Suppression is set to true for ' . $component . ' in your configuration.');
+            if (config('laravelizer.'.$component.'.suppress')) {
+                $this->line('<fg=yellow;options=bold>'.ucfirst($component).' Skipped: </>' . $this->getComponentPath($component, $table));
                 continue;
             }
-
-            $this->class_name = $this->ask('What do you want to call the model we are creating from table ' . $table . '?', Str::singular(Str::studly($table)));
-
-            $this->explain($table);
-
-            if (!$this->confirm('🤔 If this looks good to you, say yes and we will create your files. Or say no and abandon the mission.')) {
-                $this->line('🐔 You have surrendered.');
+            if (file_exists($this->getComponentPath($component, $table)) && !$this->force) {
+                $this->line('<fg-red;options-bold>'.ucfirst($component).' Already Exists: ' . $this->getComponentPath($component, $table));
+                continue;
             }
+            $this->line('<fg=green;options=bold>'.ucfirst($component).' Written: </>' . $this->getComponentPath($component, $table));
+            $this->written->push($this->getComponentPath($component, $table));
 
         }
+
+        dd($this->written);
     }
 
-    public function explain($table)
-    {
-        foreach ($this->components as $component)
-        {
-            $this->line('First we will closely inspect your database table and see what kind of stuff you keep in ' . $table);
-            $this->line('Then we will create the files you need to use this table in your Laravel app.');
-            $this->line('Here are the specific things we will create: ');
-            if (! config('laravelizer.'.$component.'.suppress')) {
-                $this->line('✏️ We will write a ' . $component . ' at ' . $this->getComponentPath($component, $table));
-            }
-        }
-    }
+
 
     protected function getAllTableNames()
     {
-        $db = new Database($this->argument('connection'));
+        $db = new Database($this->connection);
 
         return $db->getTables();
     }
@@ -79,11 +75,11 @@ class Laravelize extends Command
     protected function getComponentPath($component, $table)
     {
         return [
-            'model' => config('laravelizer.'.$component.'.path.').DIRECTORY_SEPARATOR.$this->class_name.'.php',
-            'migration' => config('laravelizer.'.$component.'.path.').DIRECTORY_SEPARATOR.date('Y_m_d_Hms').'create_'.$table.'_table.php',
-            'factory' => config('laravelizer.'.$component.'.path.').DIRECTORY_SEPARATOR.$this->class_name.'Factory.php',
-            'nova' => config('laravelizer.'.$component.'.path.').DIRECTORY_SEPARATOR.$this->class_name.'.php',
-            'test' => config('laravelizer.'.$component.'.path.').DIRECTORY_SEPARATOR.'Test'.$this->class_name.'Schema.php',
+            'model' => config('laravelizer.'.$component.'.path').DIRECTORY_SEPARATOR.$this->class_name.'.php',
+            'migration' => config('laravelizer.'.$component.'.path').DIRECTORY_SEPARATOR.date('Y_m_d_Hms').'_create_'.$table.'_table.php',
+            'factory' => config('laravelizer.'.$component.'.path').DIRECTORY_SEPARATOR.$this->class_name.'Factory.php',
+            'nova' => config('laravelizer.'.$component.'.path').DIRECTORY_SEPARATOR.$this->class_name.'.php',
+            'test' => config('laravelizer.'.$component.'.path').DIRECTORY_SEPARATOR.$this->class_name.'Test.php',
         ][$component];
     }
 }

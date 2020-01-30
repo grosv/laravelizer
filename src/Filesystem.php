@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Laravelizer\Actions;
+namespace Laravelizer;
 
 
 use Illuminate\Support\Facades\File;

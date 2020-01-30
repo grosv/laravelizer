@@ -2,7 +2,7 @@
 
 namespace Tests;
 
-use Laravelizer\Actions\Write;
+use Laravelizer\Filesystem;
 
 class FilesystemTest extends TestCase
 {
@@ -10,7 +10,7 @@ class FilesystemTest extends TestCase
     public function can_create_directory()
     {
         $this->assertDirectoryNotExists(config('laravelizer.model.path'));
-        $write = new Write();
+        $write = new Filesystem();
         $write->ensureDirectoryExists(config('laravelizer.model.path'));
         $this->assertDirectoryExists(config('laravelizer.model.path'));
     }

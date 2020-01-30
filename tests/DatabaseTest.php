@@ -7,6 +7,7 @@ use Laravelizer\Database;
 
 class DatabaseTest extends TestCase
 {
+    protected $tables = ["actor","address","category","city","country","customer","film","film_actor","film_category","film_text","inventory","language","payment","rental","staff","store"];
     public function setUp(): void
     {
         parent::setUp();
@@ -18,7 +19,7 @@ class DatabaseTest extends TestCase
 
         $database = new Database('sakila');
 
-        $this->assertEquals(["actor","address","category","city","country","customer","film","film_actor","film_category","film_text","inventory","language","payment","rental","staff","store"], $database->getTables());
+        $this->assertEquals($this->tables, $database->getTables());
 
 
     }
@@ -35,7 +36,7 @@ class DatabaseTest extends TestCase
     {
         $database = new Database('sakila');
 
-        $this->assertInstanceOf(Collection::class, $database->getColumns('address'));
+        $this->assertInstanceOf(Collection::class, $database->getColumns($this->tables[array_rand($this->tables)]));
     }
 
     /** @test */
@@ -43,6 +44,6 @@ class DatabaseTest extends TestCase
     {
         $database = new Database('sakila');
 
-        $this->assertInstanceOf(Collection::class, $database->getForeignKeyRestraints('address'));
+        $this->assertInstanceOf(Collection::class, $database->getForeignKeyRestraints($this->tables[array_rand($this->tables)]));
     }
 }
