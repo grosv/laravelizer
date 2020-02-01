@@ -33,8 +33,9 @@ class Database
     {
         $columns = collect([]);
         foreach (DB::connection($this->connection)->getDoctrineSchemaManager()->listTableColumns($table) as $column) {
-
-                $columns->push([
+                $col = [
+                    'connection' => $this->connection,
+                    'table' => $table,
                     'name' => $column->getName(),
                     'type' => $column->getType()->getName(),
                     'length' => $column->getLength(),
@@ -42,14 +43,26 @@ class Database
                     'scale' => $column->getScale(),
                     'unsigned' => $column->getUnsigned(),
                     'fixed' => $column->getFixed(),
+                    'default' => $column->getDefault(),
+                    'autoincrement' => $column->getAutoincrement(),
                     'notnull' => $column->getNotNull(),
-                    'options' => $column->getPlatformOptions()
-                ]);
+                    'options' => $column->getPlatformOptions(),
+                    'definition' => $column->getColumnDefinition(),
+                    'comment' => $column->getComment(),
+                ];
+
+                $migration = new Migration($col);
+                $col['migration'] = $migration->execute();
+
+                $columns->push($col);
 
 
         }
+
         return $columns;
     }
+
+
 
     public function getForeignKeyRestraints($table)
     {

@@ -2,7 +2,7 @@
 
 return [
     'model' => [
-        'suppress' => env('LARAVELIZER_MODEL_SUPPRESS', false),
+        'suppress' => env('LARAVELIZER_MODEL_SUPPRESS', true),
         'path' => env('LARAVELIZER_MODEL_PATH', app_path()),
         'stub' => env('LARAVELIZER_MODEL_STUB', 'laravelizer::model'),
     ],
@@ -12,7 +12,7 @@ return [
         'stub' => env('LARAVELIZER_MIGRATION_STUB', 'laravelizer::migration'),
     ],
     'factory' => [
-        'suppress' => env('LARAVELIZER_FACTORY_SUPPRESS', false),
+        'suppress' => env('LARAVELIZER_FACTORY_SUPPRESS', true),
         'path' => env('LARAVELIZER_FACTORY_PATH', database_path('factories')),
         'stub' => env('LARAVELIZER_FACTORY_STUB', 'laravelizer::factory'),
     ],

@@ -15,7 +15,7 @@ class LaravelizerServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        $this->loadViewsFrom('/../resource/views', 'laravelizer');
+        $this->loadViewsFrom(__DIR__.'/../resources/views', 'laravelizer');
 
         if ($this->app->runningInConsole()) {
             $this->publishes([

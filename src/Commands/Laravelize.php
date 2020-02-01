@@ -5,6 +5,7 @@ namespace Laravelizer\Command;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 use Laravelizer\Database;
+use Laravelizer\Stub;
 
 class Laravelize extends Command
 {
@@ -56,11 +57,22 @@ class Laravelize extends Command
                 continue;
             }
             $this->line('<fg=green;options=bold>'.ucfirst($component).' Written: </>' . $this->getComponentPath($component, $table));
+
+            $stub = new Stub();
+            $db = new Database($this->connection);
+
+            $stub->setTable($table);
+            $stub->setConnection($this->connection);
+
+            $stub->setColumns($db->getColumns($table));
+
+            dump($stub->$component($this->getComponentPath($component, $table)));
+
             $this->written->push($this->getComponentPath($component, $table));
 
         }
 
-        dd($this->written);
+
     }
 
 
