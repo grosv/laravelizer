@@ -6,9 +6,11 @@ namespace Laravelizer;
 
 use Illuminate\Support\Collection;
 use Laravelizer\Models\City;
+use Laravelizer\Models\Country;
 use Laravelizer\Models\Currency;
 use Laravelizer\Models\FirstName;
 use Laravelizer\Models\JobTitle;
+use Laravelizer\Models\Surname;
 use Laravelizer\Models\USState;
 
 class Identifier
@@ -45,13 +47,16 @@ class Identifier
     public function execute()
     {
         $this->data->each(function($row) {
-            foreach ($this->results as $k) {
+            foreach ($this->results as $k => $v) {
+                if (!method_exists($this, $k)) {
+                    dd('Missing method: ' . $k);
+                }
                 $this->results[$k] += $this->$k($row);
             }
         });
         $this->results['word'] = (int)$this->data->count() / 2;
         asort($this->results);
-        return array_pop(array_keys($this->results));
+        return last(array_keys($this->results));
 
     }
 
@@ -62,7 +67,7 @@ class Identifier
 
     public function last_name($row)
     {
-        return 0;
+        return Surname::where('name', strtolower(strtolower(trim($row))))->count();
     }
 
     private function full_name($row)
@@ -81,7 +86,7 @@ class Identifier
 
     public function phone($row)
     {
-        return (int)strlen(preg_replace(['^0-9'], '', $row)) === 10;
+        return (int)strlen(preg_replace(['/^0-9/'], '', $row)) === 10;
     }
 
     public function email($row)
@@ -109,6 +114,16 @@ class Identifier
         return (int)is_numeric(trim($row) && strlen(trim($row)) === 5);
     }
 
+    public function country($row)
+    {
+        return Country::where('country', strtolower(trim($row)))->count();
+    }
+
+    public function country_code($row)
+    {
+        return Country::where('code', strtolower(trim($row)))->count();
+    }
+
     public function currency($row)
     {
         return Currency::where('code', strtoupper(trim($row)))->count();
@@ -122,6 +137,9 @@ class Identifier
         if (ucwords($row) != $row) {
             return 0;
         }
+        if ($this->last_name($row)) {
+            return 0;
+        }
         return 1;
     }
 
@@ -132,7 +150,7 @@ class Identifier
 
     public function sentence($row)
     {
-        return sizeof(preg_split($this->sentence_regex, $row, -1, PREG_SPLIT_NO_EMPTY)) === 1;
+        return 0;
     }
 
     public function paragraph($row)
