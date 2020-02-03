@@ -50,11 +50,19 @@ class Stub
                 $updated_at = true;
             }
         }
-        $this->assign['columns'] = $this->columns;
+
         $this->assign['timestamps'] = $updated_at && $created_at;
         $this->assign['soft_deletes'] = $soft_deletes;
 
         return $this->build('migration');
+    }
+
+    public function factory($path): string
+    {
+        $this->assign['model_namespace'] = $this->getNamespaceFromPath(substr($path, 0, strrpos( $path, '/')), 'App');
+        $this->assign['model_name'] = $this->getClassNameFromPath($path);
+
+        return $this->build('factory');
     }
 
     public function setTable($table): void
@@ -70,6 +78,16 @@ class Stub
     public function setColumns($columns): void
     {
         $this->columns = $columns;
+        $this->assign['columns'] = $this->columns;
+    }
+
+    public function setOptions($options)
+    {
+        foreach ($options as $k => $v) {
+            if (in_array($k, ['updated_at', 'created_at', 'add_timestamps', 'add_deletes'])) {
+                $this->assign[$k] = $v;
+            }
+        }
     }
 
     public function share(): void

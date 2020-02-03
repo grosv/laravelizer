@@ -5,10 +5,10 @@ use {{ $model_namespace }}\{{ $model_name }};
 use Illuminate\Support\Str;
 use Faker\Generator as Faker;
 
-$factory->define({{ $model }}::class, function (Faker $faker) {
+$factory->define({{ $model_name }}::class, function (Faker $faker) {
 return [
     @foreach ($columns as $column)
-    "{{$column['name']}}" => {!! $column['faker'] ?? '' !!},
+    "{{$column['name']}}" => {!! $column['factory'] ?? '' !!},
     @endforeach
     ];
 });

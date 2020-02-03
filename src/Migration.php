@@ -15,22 +15,21 @@ class Migration
 
     public function execute()
     {
+        if ($this->column['type'] === 'array' || $this->column['type'] === 'object') {
+            return $this->object_array();
+        }
         $method = $this->column['type'];
         return method_exists($this, $method) ? $this->$method() : $this->missingType();
     }
 
     protected function smallint()
     {
-        $migration = '$table->smallInteger("' . $this->column['name'] . '")';
-        $migration .= $this->unsigned();
-        return $migration . ';';
+        return '$table->smallInteger("' . $this->column['name'] . '")' . $this->modifiers() . ';';
     }
 
     protected function integer()
     {
-        $migration = '$table->integer("' . $this->column['name'] . '")';
-        $migration .= $this->unsigned();
-        return $migration . ';';
+        return '$table->integer("' . $this->column['name'] . '")' . $this->modifiers() . ';';
     }
 
     protected function float()
@@ -45,23 +44,17 @@ class Migration
 
     protected function bigint()
     {
-        $migration = '$table->bigInteger("' . $this->column['name'] . '")';
-        $migration .= $this->unsigned();
-        return $migration . ';';
+        return '$table->bigInteger("' . $this->column['name'] . '")' . $this->modifiers() . ';';
     }
 
     protected function string(): string
     {
-        $migration = '$table->string("' . $this->column['name'] . $this->column['length'] . '")';
-        $migration .= $this->modifiers();
-        return $migration . ';';
+        return '$table->string("' . $this->column['name'] . $this->column['length'] . '")' . $this->modifiers() . ';';
     }
 
     protected function text(): string
     {
-        $migration = '$table->text("' . $this->column['name'] . '")';
-        $migration .= $this->modifiers();
-        return $migration . ';';
+        return '$table->text("' . $this->column['name'] . '")' . $this->modifiers() . ';';
     }
 
     protected function enum(): string
@@ -70,7 +63,22 @@ class Migration
         return '$table->enum("' . $this->column['name'] . ', [' . $distinct . '])' . $this->modifiers() . ';';
     }
 
+    protected function object_array(): string
+    {
+        return '$table->text("' . $this->column['name'] . '")' . $this->modifiers() . ';';
+    }
+
     protected function simple_array(): string
+    {
+        return '$table->text("' . $this->column['name'] . '")' . $this->modifiers() . ';';
+    }
+
+    protected function json_array(): string
+    {
+        return '$table->json("' . $this->column['name'] . '")' . $this->modifiers() . ';';
+    }
+
+    protected function json(): string
     {
         return '$table->json("' . $this->column['name'] . '")' . $this->modifiers() . ';';
     }
@@ -83,10 +91,7 @@ class Migration
 
     protected function datetime(): string
     {
-        $migration = '$table->timeStamp("' . $this->column['name'] . '")';
-        $migration .= $this->modifiers();
-
-        return $migration . ';';
+        return '$table->timeStamp("' . $this->column['name'] . '")' . $this->modifiers() . ';';
     }
 
     protected function date()
@@ -101,9 +106,7 @@ class Migration
 
     protected function boolean()
     {
-        $migration = '$table->boolean("' . $this->column['name'] . '")';
-        $migration .= $this->modifiers();
-        return $migration . ';';
+        return '$table->boolean("' . $this->column['name'] . '")' . $this->modifiers() . ';';
     }
 
     private function modifiers()
@@ -188,6 +191,7 @@ class Migration
     private function missingType()
     {
         dd('Missing type ' . $this->column['type']);
+        return '';
     }
 
 }

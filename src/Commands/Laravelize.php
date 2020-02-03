@@ -14,6 +14,10 @@ class Laravelize extends Command
                             {table=___*___}
                             {--connection=}
                             {--force}
+                            {--updated_at=}
+                            {--created_at=}
+                            {--add_timestamps}
+                            {--add_deletes}
     ';
 
     protected $tables = [];
@@ -33,7 +37,6 @@ class Laravelize extends Command
 
     public function handle()
     {
-
         $this->connection = $this->hasOption('connection') && !empty($this->option('connection')) ? $this->option('connection') : config('database.default');
         $this->force = $this->hasOption('force') && !empty($this->option('force'));
         $this->tables = $this->argument('table') === '___*___' ? $this->getAllTableNames() : [$this->argument('table')];
@@ -61,12 +64,17 @@ class Laravelize extends Command
             $stub = new Stub();
             $db = new Database($this->connection);
 
+
+
             $stub->setTable($table);
             $stub->setConnection($this->connection);
 
+
             $stub->setColumns($db->getColumns($table));
+            $stub->setOptions($this->option());
 
             dump($stub->$component($this->getComponentPath($component, $table)));
+
 
             $this->written->push($this->getComponentPath($component, $table));
 

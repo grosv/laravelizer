@@ -54,6 +54,9 @@ class Database
                 $migration = new Migration($col);
                 $col['migration'] = $migration->execute();
 
+                $factory = new Factory($col);
+                $col['factory'] = $factory->execute();
+
                 $columns->push($col);
 
 
