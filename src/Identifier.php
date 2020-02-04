@@ -48,14 +48,12 @@ class Identifier
     {
         $this->data->each(function($row) {
             foreach ($this->results as $k => $v) {
-                if (!method_exists($this, $k)) {
-                    dd('Missing method: ' . $k);
-                }
                 $this->results[$k] += $this->$k($row);
             }
         });
         $this->results['word'] = (int)$this->data->count() / 2;
         asort($this->results);
+
         return last(array_keys($this->results));
 
     }
@@ -150,7 +148,7 @@ class Identifier
 
     public function sentence($row)
     {
-        return 0;
+        return (int)sizeof(explode(' ', $row)) > 4 && in_array(substr($row, -1), ['.', '?', '!']) && sizeof(preg_split($this->sentence_regex, $row, -1, PREG_SPLIT_NO_EMPTY)) < 2;
     }
 
     public function paragraph($row)
