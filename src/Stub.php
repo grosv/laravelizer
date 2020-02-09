@@ -4,25 +4,29 @@
 namespace Laravelizer;
 
 
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
 
 class Stub
 {
-    protected $assign = ['php_open' => '<?php'];
-    protected $columns;
+    public $assign;
+    public $columns;
 
     public function __construct()
     {
+        $this->assign = [
+            'php_open' => '<?php',
+            'casts' => [],
+            'attributes' => [],
+            'add_soft_deletes' => false,
+            'add_timestamps' => false,
+        ];
 
     }
+
     public function model($path): string
     {
-        $this->assign['casts'] = [];
-        $this->assign['attributes'] = [];
-        $path = str_replace(app_path(), '', $path);
-        $this->assign['model_namespace'] = $this->getNamespaceFromPath(substr($path, 0, strrpos( $path, '/')), 'App');
-        $this->assign['model_name'] = $this->getClassNameFromPath($path);
         $this->assign['soft_delete'] = isset($this->columns['deleted_at']);
         $this->assign['timestamps'] = isset($this->columns['created_at']) && isset($this->columns['updated_at']);
 
@@ -52,15 +56,13 @@ class Stub
         }
 
         $this->assign['timestamps'] = $updated_at && $created_at;
-        $this->assign['soft_deletes'] = $soft_deletes;
+
 
         return $this->build('migration');
     }
 
     public function factory($path): string
     {
-        $this->assign['model_namespace'] = $this->getNamespaceFromPath(substr($path, 0, strrpos( $path, '/')), 'App');
-        $this->assign['model_name'] = $this->getClassNameFromPath($path);
 
         return $this->build('factory');
     }
@@ -75,7 +77,22 @@ class Stub
         $this->assign['connection'] = $connection;
     }
 
-    public function setColumns($columns): void
+    public function setModelClassName(string $value)
+    {
+        $this->assign['model_name'] = $value;
+    }
+
+    public function setModelNamespace(string $value)
+    {
+        $this->assign['model_namespace'] = $value;
+    }
+
+    public function setSoftDeletes(bool $value)
+    {
+        $this->assign['soft_deletes'] = $value;
+    }
+
+    public function setColumns(Collection $columns): void
     {
         $this->columns = $columns;
         $this->assign['columns'] = $this->columns;
@@ -103,14 +120,7 @@ class Stub
         return view(config('laravelizer.'.$component.'.stub'));
     }
 
-    protected function getNamespaceFromPath($path, $root = null): string
-    {
-        $ns = is_null($root) ? [] : [$root];
-        foreach (explode('/', $path) as $k) {
-            array_push($ns, $k);
-        }
-        return trim(join('\\', $ns), '\\');
-    }
+
 
     public function getClassNameFromPath($path): string
     {

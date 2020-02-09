@@ -11,7 +11,7 @@ class {{ $model_name }} extends Model
 {
     @if ($soft_delete)
     use SoftDeletes;
-    @endif;
+    @endif
 
     protected $connection = "{{ $connection }}";
     protected $table = "{{ $table }}";

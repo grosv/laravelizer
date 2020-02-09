@@ -2,12 +2,12 @@
 
 return [
     'model' => [
-        'suppress' => env('LARAVELIZER_MODEL_SUPPRESS', true),
+        'suppress' => env('LARAVELIZER_MODEL_SUPPRESS', false),
         'path' => env('LARAVELIZER_MODEL_PATH', app_path()),
         'stub' => env('LARAVELIZER_MODEL_STUB', 'laravelizer::model'),
     ],
     'migration' => [
-        'suppress' => env('LARAVELIZER_MIGRATION_SUPPRESS', true),
+        'suppress' => env('LARAVELIZER_MIGRATION_SUPPRESS', false),
         'path' => env('LARAVELIZER_MIGRATION_PATH', database_path('migrations')),
         'stub' => env('LARAVELIZER_MIGRATION_STUB', 'laravelizer::migration'),
     ],

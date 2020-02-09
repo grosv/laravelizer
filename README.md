@@ -1,6 +1,10 @@
 # laravelizer
 ### Create Models, Migrations, and Factories for any existing MySQL database
 
+Whether you want to migrate away from another framework to Laravel or you just want to connect a Laravel installation to your database, this package makes it really easy.
+
+Just define the connection to your database as you would any Laravel database. It doesn't have to be the default connection, but it can be. Then install this package and follow the instructions to create migrations, models, factories, tests, and / or Nova resources based on the structure of and existing data within your database.
+
 ## Installation
 Create the Laravel installation into which you want to add model, migrations, and factories for your existing (presumably non-Laravel) database. Then install this package in that Laravel installation like so:
 
@@ -26,8 +30,5 @@ If you do not specify a table name, we'll just do all of them.
 
 ## Contributing
 
+I'd love some help to make this package super useful for the community. Submit a PR to improve the code of the README or just open an issue letting me know what you'd like to see added.
 
-
-## Known Limitations (Help Wanted)
-
-**Enum and Geometry Types:** I just convert them to strings. So migrations and factories involving those types of fields are incorrect. I'm not sure how to approach location, but I do have an idea for enums. We could, in theory, run a query to get the distinct values from the column and assume that those are the values that should be used to create the enum column in the migration.
