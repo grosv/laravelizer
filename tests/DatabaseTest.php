@@ -13,7 +13,10 @@ class DatabaseTest extends TestCase
         parent::setUp();
 
     }
-    /** @test */
+    /**
+     * @test
+     * @group db
+     */
     public function can_list_database_tables()
     {
 
@@ -23,7 +26,10 @@ class DatabaseTest extends TestCase
 
 
     }
-    /** @test */
+    /**
+     * @test
+     * @group db
+     */
     public function can_list_table_column_names()
     {
         $database = new Database('sakila');
@@ -31,7 +37,10 @@ class DatabaseTest extends TestCase
         $this->assertEquals(['actor_id', 'first_name', 'last_name', 'last_update'], $database->getColumnNames('actor'));
     }
 
-    /** @test */
+    /**
+     * @test
+     * @group db
+     */
     public function can_identify_column_types()
     {
         $database = new Database('sakila');
@@ -39,7 +48,10 @@ class DatabaseTest extends TestCase
         $this->assertInstanceOf(Collection::class, $database->getColumns($this->tables[array_rand($this->tables)]));
     }
 
-    /** @test */
+    /**
+     * @test
+     * @group db
+     */
     public function can_get_foreign_key_contraints()
     {
         $database = new Database('sakila');
