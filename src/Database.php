@@ -84,14 +84,4 @@ class Database
         }
         return $constraints;
     }
-
-    protected function faker()
-    {
-        return 'return a faker type';
-    }
-
-    protected function nova()
-    {
-        return 'return a nova field';
-    }
 }

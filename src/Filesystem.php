@@ -10,7 +10,12 @@ class Filesystem
 {
     public function write($path, $contents): void
     {
-        $path = substr($path, 0, strrpos( $path, '/'));
+        // @todo - Remove feature flag
+        if (config('env.ff-laravelizer')) {
+            dump($contents);
+            return;
+        }
+
         $this->ensureDirectoryExists($path);
         File::put($path, $contents);
     }
@@ -22,8 +27,16 @@ class Filesystem
 
     public function ensureDirectoryExists($path): void
     {
+        if ($this->isFileName($path)) {
+            $path = substr($path, 0, strrpos( $path, '/'));
+        }
         if (!File::isDirectory($path)) {
             File::makeDirectory($path, 0777, $recursive = true, $force = true);
         }
+    }
+
+    private function isFileName($path)
+    {
+        return sizeof(explode('.', $path))  > 1;
     }
 }

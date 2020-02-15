@@ -3,7 +3,7 @@
 
 namespace Laravelizer;
 
-
+use ColumnClassifier\Classifier;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -13,6 +13,29 @@ class Factory
     protected $column;
     protected $name;
     protected $sample;
+
+    protected $classified = [
+        'first_name' => 'firstName',
+        'last_name' => 'lastName',
+        'full_name' => 'name',
+        'phone' => 'phoneNumber',
+        'email' => 'email',
+        'city' => 'city',
+        'state' => 'state',
+        'state_abbr' => 'stateAbbr',
+        'zip_code' => 'zipcode',
+        'country' => 'country',
+        'country_code' => 'countryCode',
+        'currency' => 'currencyCode',
+        'company' => 'companyName',
+        'job_title' => 'jobTitle',
+        'sentence' => 'sentence',
+        'paragraph' => 'paragraph',
+        'html' => 'html',
+        'word' => 'word',
+
+
+    ];
 
     public function __construct($column)
     {
@@ -66,7 +89,11 @@ class Factory
             return '$faker->address';
         }
 
+        // @TODO - Fix this: https://github.com/edgrosvenor/laravelizer/issues/10
         return '$faker->word';
+        //$classifier = new Classifier($this->sample);
+        //return '$faker->' . $this->classified[(string)$classifier->execute()];
+
     }
 
     public function simple_array()

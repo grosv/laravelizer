@@ -60,7 +60,7 @@ class Migration
     protected function enum(): string
     {
         $distinct = '"' . DB::connection($this->column['connection'])->table($this->column['table'])->select($this->column['name'])->groupBy($this->column['name'])->get()->pluck($this->column['name'])->join('","') . '"';
-        return '$table->enum("' . $this->column['name'] . ', [' . $distinct . '])' . $this->modifiers() . ';';
+        return '$table->enum("' . $this->column['name'] . '", [' . $distinct . '])' . $this->modifiers() . ';';
     }
 
     protected function object_array(): string
@@ -77,6 +77,8 @@ class Migration
     {
         return '$table->json("' . $this->column['name'] . '")' . $this->modifiers() . ';';
     }
+
+
 
     protected function json(): string
     {
