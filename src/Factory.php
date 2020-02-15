@@ -3,7 +3,6 @@
 
 namespace Laravelizer;
 
-
 use ColumnClassifier\Classifier;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -90,8 +89,10 @@ class Factory
             return '$faker->address';
         }
 
-        $classifier = new Classifier($this->sample);
-        return '$faker->' . $this->classified[(string)$classifier->execute()];
+        // @TODO - Fix this: https://github.com/edgrosvenor/laravelizer/issues/10
+        return '$faker->word';
+        //$classifier = new Classifier($this->sample);
+        //return '$faker->' . $this->classified[(string)$classifier->execute()];
 
     }
 

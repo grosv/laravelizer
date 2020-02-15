@@ -1,4 +1,4 @@
-# laravelizer
+# laravelizer (a work in progress)
 ### Create Models, Migrations, and Factories for any existing MySQL database
 
 Whether you want to migrate away from another framework to Laravel or you just want to connect a Laravel installation to your database, this package makes it really easy.

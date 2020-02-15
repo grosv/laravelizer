@@ -21,6 +21,10 @@ class Stub
             'attributes' => [],
             'add_soft_deletes' => false,
             'add_timestamps' => false,
+            'soft_deletes' => false,
+            'timestamps' => false,
+            'connection' => '',
+            'table' => '',
         ];
 
     }
@@ -107,7 +111,7 @@ class Stub
         }
     }
 
-    public function share(): void
+    private function share(): void
     {
         foreach ($this->assign as $k => $v) {
             View::share($k, $v);
@@ -121,9 +125,4 @@ class Stub
     }
 
 
-
-    public function getClassNameFromPath($path): string
-    {
-        return trim(current(explode('.', last(explode('/', $path)))), '\\');
-    }
 }

@@ -7,41 +7,56 @@ use Laravelizer\Stub;
 
 class StubTest extends TestCase
 {
+    protected $stub;
+    protected $model;
+    protected $migration;
+    protected $factory;
+    protected $test;
+    protected $nova;
+    protected $columns_json = '';
+
     public function setUp(): void
     {
         parent::setUp();
+        $this->stub = new Stub();
+        $this->stub->setTable('people');
+        $this->stub->setModelNamespace('App');
+        $this->stub->setColumns(collect(json_decode($this->columns_json, true)));
+        $this->stub->setModelClassName('Person');
+        $this->stub->setConnection('mysql');
+        $this->model = $this->stub->model('app\Person.php');
+        $this->factory = $this->stub->factory('database/factories/PersonFactory.php');
+        $this->migration = $this->stub->migration('database/migrations/0000_00_00_000000_create_people_table.php');
     }
 
     /** @test */
     public function testSetTable()
     {
-        $stub = new Stub();
-        $stub->setTable('this');
-        $this->assertSame('this', $stub->assign['table']);
+        $this->assertSame('people', $this->stub->assign['table']);
     }
 
     public function testSetModelNamespace()
     {
-        $stub = new Stub();
-        $stub->setModelNamespace('mnsp');
-        $this->assertSame('mnsp', $stub->assign['model_namespace']);
+        $this->assertSame('App', $this->stub->assign['model_namespace']);
     }
 
     public function testSetColumns()
     {
-        $stub = new Stub();
-        $stub->setColumns(collect(['this' => 'that', 'that' => 'this']));
-        $this->assertEquals(collect(['this' => 'that', 'that' => 'this']), $stub->assign['columns']);
+        $this->assertEquals(collect(json_decode($this->columns_json, true)), $this->stub->assign['columns']);
     }
 
     public function testMigration()
     {
 
+
     }
 
     public function testModel()
     {
-
+        $this->assertStringContainsString('class Person extends Model', $this->model);
+        $this->assertStringContainsString('namespace App', $this->model);
+        $this->assertStringContainsString('protected $table = "people"', $this->model);
+        $this->assertStringContainsString('protected $connection = "mysql"', $this->model);
     }
 
     public function testFactory()
@@ -51,48 +66,34 @@ class StubTest extends TestCase
 
     public function testSetSoftDeletes()
     {
-        $stub = new Stub();
-        $stub->setSoftDeletes(0);
-        $this->assertFalse($stub->assign['soft_deletes']);
-        $stub->setSoftDeletes(true);
-        $this->assertTrue($stub->assign['soft_deletes']);
-        $stub->setSoftDeletes(0);
-        $this->assertFalse($stub->assign['soft_deletes']);
-        $stub->setSoftDeletes('yup');
-        $this->assertTrue($stub->assign['soft_deletes']);
+        $this->stub->setSoftDeletes(0);
+        $this->assertFalse($this->stub->assign['soft_deletes']);
+        $this->stub->setSoftDeletes(true);
+        $this->assertTrue($this->stub->assign['soft_deletes']);
+        $this->stub->setSoftDeletes(0);
+        $this->assertFalse($this->stub->assign['soft_deletes']);
+        $this->stub->setSoftDeletes('yup');
+        $this->assertTrue($this->stub->assign['soft_deletes']);
     }
 
-    public function testShare()
-    {
-
-    }
-
-    public function testBuild()
-    {
-
-    }
 
     public function testSetConnection()
     {
-        $stub = new Stub();
-        $stub->setConnection('mysql');
-        $this->assertSame('mysql', $stub->assign['connection']);
+        $this->assertSame('mysql', $this->stub->assign['connection']);
     }
 
     public function testSetModelClassName()
     {
-        $stub = new Stub();
-        $stub->setModelClassName('Classy');
-        $this->assertSame('Classy', $stub->assign['model_name']);
+        $this->assertSame('Person', $this->stub->assign['model_name']);
     }
 
     public function testSetOptions()
     {
-        $stub = new Stub();
+
         $ts = Carbon::parse('now');
-        $stub->setOptions(['created_at' => $ts]);
-        $this->assertSame($ts, $stub->assign['created_at']);
-        $stub->setOptions(['nosuchoption' => 'fake']);
-        $this->assertArrayNotHasKey('nosuchoption', $stub->assign);
+        $this->stub->setOptions(['created_at' => $ts]);
+        $this->assertSame($ts, $this->stub->assign['created_at']);
+        $this->stub->setOptions(['nosuchoption' => 'fake']);
+        $this->assertArrayNotHasKey('nosuchoption', $this->stub->assign);
     }
 }
