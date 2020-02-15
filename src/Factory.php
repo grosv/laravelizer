@@ -89,10 +89,9 @@ class Factory
             return '$faker->address';
         }
 
-        // @TODO - Fix this: https://github.com/edgrosvenor/laravelizer/issues/10
-        return '$faker->word';
-        //$classifier = new Classifier($this->sample);
-        //return '$faker->' . $this->classified[(string)$classifier->execute()];
+        $classifier = new Classifier($this->sample);
+
+        return '$faker->' . $this->classified[(string)$classifier->execute()];
 
     }
 
