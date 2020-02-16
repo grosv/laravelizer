@@ -34,12 +34,12 @@ class Migration
 
     protected function float()
     {
-        return '$table->float("' . $this->column['name'] . $this->precisionAndScale() . '")' . $this->modifiers() . ';';
+        return '$table->float("' . $this->column['name'] . '",' . $this->precisionAndScale() . ')' . $this->modifiers() . ';';
     }
 
     protected function decimal()
     {
-        return '$table->decimal("' . $this->column['name'] . ', ' . $this->precisionAndScale() . '")' . $this->modifiers() . ';';
+        return '$table->decimal("' . $this->column['name'] . '", ' . $this->precisionAndScale() . ')' . $this->modifiers() . ';';
     }
 
     protected function bigint()
@@ -117,7 +117,6 @@ class Migration
         $modifiers = [
             'nullable' => ['smallint', 'integer', 'bigint', 'string', 'text'],
             'unsigned' => ['smallint', 'integer', 'bigint'],
-            'precisionAndScale' => ['float', 'decimal'],
             'useCurrent' => ['datetime'],
             'autoIncrement' => ['smallint', 'integer', 'bigint'],
             'collation' => ['string', 'text'],
