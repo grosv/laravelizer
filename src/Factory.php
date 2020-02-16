@@ -4,6 +4,7 @@
 namespace Laravelizer;
 
 use ColumnClassifier\Classifier;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -45,12 +46,7 @@ class Factory
 
     public function execute()
     {
-        $this->sample = DB::connection($this->column['connection'])
-            ->table($this->column['table'])
-            ->select($this->column['name'])
-            ->groupBy($this->column['name'])
-           // ->limit(100)->get()
-            ->pluck($this->column['name']);
+
 
         $type = $this->column['type'];
 
@@ -89,9 +85,9 @@ class Factory
             return '$faker->address';
         }
 
-        $classifier = new Classifier($this->sample);
+        $classifier = new Classifier($this->getSample());
 
-        return '$faker->' . $this->classified[(string)$classifier->execute()];
+        return '$faker->' . $this->classified[(string)$classifier->execute() ?? 'word'];
 
     }
 
@@ -117,17 +113,17 @@ class Factory
 
     public function smallint()
     {
-        return '$faker->numberBetween(' . min($this->sample->toArray()) . ', ' . max($this->sample->toArray()) . ')';
+        return '$faker->numberBetween(' . min($this->getSample()->toArray()) . ', ' . max($this->getSample()->toArray()) . ')';
     }
 
     public function integer()
     {
-        return '$faker->numberBetween(' . min($this->sample->toArray()) . ', ' . max($this->sample->toArray()) . ')';
+        return '$faker->numberBetween(' . min($this->getSample()->toArray()) . ', ' . max($this->getSample()->toArray()) . ')';
     }
 
     public function bigint()
     {
-        return '$faker->numberBetween(' . min($this->sample->toArray()) . ', ' . max($this->sample->toArray()) . ')';
+        return '$faker->numberBetween(' . min($this->getSample()->toArray()) . ', ' . max($this->getSample()->toArray()) . ')';
     }
 
     public function blob()
@@ -137,7 +133,7 @@ class Factory
 
     public function enum()
     {
-        $array = join('","', $this->sample->toArray());
+        $array = join('","', $this->getSample()->toArray());
         return '$faker->randomElement([" ' . $array . '"])';
     }
 
@@ -167,9 +163,18 @@ class Factory
         return '$faker->randomFloat(' . $this->column['scale'] . ', 0, ' . $max . ')';
     }
 
+    public function getSample(): Collection
+    {
+        return DB::connection($this->column['connection'])
+            ->table($this->column['table'])
+            ->select($this->column['name'])
+            ->groupBy($this->column['name'])
+            ->limit(100)->get()
+            ->pluck($this->column['name']);
+    }
+
     private function missingTypeMethod()
     {
-        dump($this->sample);
         dd('Missing a faker generator for ' . $this->column['type']);
 
         return '$faker->word';

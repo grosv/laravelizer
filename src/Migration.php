@@ -39,7 +39,7 @@ class Migration
 
     protected function decimal()
     {
-        return '$table->decimal("' . $this->column['name'] . $this->precisionAndScale() . '")' . $this->modifiers() . ';';
+        return '$table->decimal("' . $this->column['name'] . ', ' . $this->precisionAndScale() . '")' . $this->modifiers() . ';';
     }
 
     protected function bigint()

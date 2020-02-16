@@ -44,7 +44,9 @@ class Laravelize extends Command
 
 
         foreach ($this->tables as $table) {
-            $this->laravelize($table);
+            if ($table !== 'migrations') {
+                $this->laravelize($table);
+            }
         }
     }
 
