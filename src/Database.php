@@ -57,6 +57,9 @@ class Database
                 $factory = new Factory($col);
                 $col['factory'] = $factory->execute();
 
+                $nova = new Nova($col);
+                $col['nova'] = $nova->execute();
+
                 $columns->push($col);
 
 

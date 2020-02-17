@@ -11,12 +11,12 @@ use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
 
-class {{ $model }} extends Resource
+class {{ $model_name }} extends Resource
 {
     /** @var string */
-    public static $model = 'Domains\{{$domain}}\Models\{{ $model }}';
+    public static $model = '{{ $model_namespace }}\{{ $model_name }}';
     /** @var string */
-    public static $group = '{{ $domain }}';
+    public static $group = '';
     /** @var boolean */
     public static $displayInNavigation = true;
     /** @var array */

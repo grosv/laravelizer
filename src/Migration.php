@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\DB;
 
 class Migration
 {
+
     protected $column;
 
     public function __construct($column)
@@ -19,6 +20,7 @@ class Migration
             return $this->object_array();
         }
         $method = $this->column['type'];
+
         return method_exists($this, $method) ? $this->$method() : $this->missingType();
     }
 
@@ -34,12 +36,12 @@ class Migration
 
     protected function float()
     {
-        return '$table->float("' . $this->column['name'] . $this->precisionAndScale() . '")' . $this->modifiers() . ';';
+        return '$table->float("' . $this->column['name'] . '",' . $this->precisionAndScale() . ')' . $this->modifiers() . ';';
     }
 
     protected function decimal()
     {
-        return '$table->decimal("' . $this->column['name'] . $this->precisionAndScale() . '")' . $this->modifiers() . ';';
+        return '$table->decimal("' . $this->column['name'] . '", ' . $this->precisionAndScale() . ')' . $this->modifiers() . ';';
     }
 
     protected function bigint()
@@ -60,6 +62,7 @@ class Migration
     protected function enum(): string
     {
         $distinct = '"' . DB::connection($this->column['connection'])->table($this->column['table'])->select($this->column['name'])->groupBy($this->column['name'])->get()->pluck($this->column['name'])->join('","') . '"';
+
         return '$table->enum("' . $this->column['name'] . '", [' . $distinct . '])' . $this->modifiers() . ';';
     }
 
@@ -77,7 +80,6 @@ class Migration
     {
         return '$table->json("' . $this->column['name'] . '")' . $this->modifiers() . ';';
     }
-
 
 
     protected function json(): string
@@ -117,7 +119,6 @@ class Migration
         $modifiers = [
             'nullable' => ['smallint', 'integer', 'bigint', 'string', 'text'],
             'unsigned' => ['smallint', 'integer', 'bigint'],
-            'precisionAndScale' => ['float', 'decimal'],
             'useCurrent' => ['datetime'],
             'autoIncrement' => ['smallint', 'integer', 'bigint'],
             'collation' => ['string', 'text'],
@@ -132,6 +133,7 @@ class Migration
                 $string .= $this->$k();
             }
         }
+
         return $string;
     }
 
@@ -143,9 +145,8 @@ class Migration
     private function precisionAndScale()
     {
         return !is_null($this->column['precision'] && !is_null($this->column['scale'])) ?
-             $this->column['precision'] . ', ' . $this->column['scale'] : '';
+            $this->column['precision'] . ', ' . $this->column['scale'] : '';
     }
-
 
 
     private function nullable()
@@ -157,7 +158,6 @@ class Migration
     {
         return $this->column['unsigned'] ? '->unsigned()' : '';
     }
-
 
 
     private function useCurrent()
@@ -193,6 +193,7 @@ class Migration
     private function missingType()
     {
         dd('Missing type ' . $this->column['type']);
+
         return '';
     }
 
