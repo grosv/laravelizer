@@ -1,16 +1,9 @@
 <?php
 
-
 namespace Laravelizer;
-
-use ColumnClassifier\Classifier;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 
 class Nova
 {
-
     protected $column;
     protected $name;
 
@@ -29,42 +22,42 @@ class Nova
 
     public function string()
     {
-        return 'Text::make(' . $this->name . ')';
+        return 'Text::make('.$this->name.')';
     }
 
     public function simple_array()
     {
-        return 'Code::make(' . $this->name . ')';
+        return 'Code::make('.$this->name.')';
     }
 
     public function text()
     {
-        return 'Text::make(' . $this->name . ')';
+        return 'Text::make('.$this->name.')';
     }
 
     public function geometry()
     {
-        return 'Text::make(' . $this->name . ')';
+        return 'Text::make('.$this->name.')';
     }
 
     public function boolean()
     {
-        return 'Boolean::make(' . $this->name . ')';
+        return 'Boolean::make('.$this->name.')';
     }
 
     public function smallint()
     {
-        return 'Number::make(' . $this->name . ')';
+        return 'Number::make('.$this->name.')';
     }
 
     public function integer()
     {
-        return 'Number::make(' . $this->name . ')';
+        return 'Number::make('.$this->name.')';
     }
 
     public function bigint()
     {
-        return 'Number::make(' . $this->name . ')';
+        return 'Number::make('.$this->name.')';
     }
 
     public function blob()
@@ -74,35 +67,33 @@ class Nova
 
     public function enum()
     {
-        return 'Text::make(' . $this->name . ')';
+        return 'Text::make('.$this->name.')';
     }
 
     public function datetime()
     {
-        return 'DateTime::make(' . $this->name . ')';
+        return 'DateTime::make('.$this->name.')';
     }
 
     public function date()
     {
-        return 'Date::make(' . $this->name . ')';
+        return 'Date::make('.$this->name.')';
     }
 
     public function float()
     {
-        return 'Number::make(' . $this->name . ')';
+        return 'Number::make('.$this->name.')';
     }
 
     public function decimal()
     {
-        return 'Number::make(' . $this->name . ')';
+        return 'Number::make('.$this->name.')';
     }
 
     private function missingTypeMethod()
     {
-        dd('Missing a nova generator for ' . $this->column['type']);
+        dd('Missing a nova generator for '.$this->column['type']);
 
         return '$faker->word';
     }
-
-
 }
