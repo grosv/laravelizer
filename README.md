@@ -1,5 +1,8 @@
 # laravelizer (a work in progress)
 ### Create Models, Migrations, and Factories for any existing MySQL database
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/edgrosvenor/laravelizer.svg?style=flat-square)](https://packagist.org/packages/edgrosvenor/laravelizer)
+[![StyleCI](https://github.styleci.io/repos/234602553/shield?branch=master)](https://github.styleci.io/repos/234602553)
+![Build Status](https://app.chipperci.com/projects/f7090772-1ef1-443e-acfc-8cb77cb84b51/status/master)
 
 Whether you want to migrate away from another framework to Laravel or you just want to connect a Laravel installation to your database, this package makes it really easy.
 
