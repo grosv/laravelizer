@@ -35,7 +35,7 @@ class TestCase extends BaseTestCase
 
             $dir = '/tmp/laravelizer/'.$component;
             if (is_dir($dir)) {
-                $files = array_diff(scandir($dir), array('.','..'));
+                $files = array_diff(scandir($dir), ['.', '..']);
                 foreach ($files as $file) {
                     unlink("$dir/$file");
                 }

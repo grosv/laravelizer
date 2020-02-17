@@ -3,27 +3,24 @@
 namespace Laravelizer;
 
 use Doctrine\DBAL\Types\Type;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
 use Laravelizer\Command\Laravelize;
 use Laravelizer\Types\EnumType;
 use Laravelizer\Types\GeometryType;
 
-
 class LaravelizerServiceProvider extends ServiceProvider
 {
-
     public function boot(): void
     {
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'laravelizer');
 
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__ . '/../config/config.php' => config_path('laravelizer.php'),
+                __DIR__.'/../config/config.php' => config_path('laravelizer.php'),
             ], 'config');
 
             $this->publishes([
-                __DIR__ . '/../resources/views' => resource_path('views/vendor/laravelizer'),
+                __DIR__.'/../resources/views' => resource_path('views/vendor/laravelizer'),
             ], 'views');
 
             $this->commands([
@@ -40,8 +37,6 @@ class LaravelizerServiceProvider extends ServiceProvider
 
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__ . '/../config/config.php', 'laravelizer');
-
+        $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'laravelizer');
     }
-
 }
