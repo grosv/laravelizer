@@ -17,7 +17,7 @@ return [
         'stub' => env('LARAVELIZER_FACTORY_STUB', 'laravelizer::factory'),
     ],
     'nova' => [
-        'suppress' => env('LARAVELIZER_NOVA_SUPPRESS', true),
+        'suppress' => env('LARAVELIZER_NOVA_SUPPRESS', false),
         'path' => env('LARAVELIZER_NOVA_PATH', app_path('Nova')),
         'stub' => env('LARAVELIZER_NOVA_STUB', 'laravelizer::nova'),
     ],

@@ -72,7 +72,6 @@ class Laravelize extends Command
             $stub->setTable($table);
             $stub->setConnection($this->connection);
             $stub->setColumns($db->getColumns($table));
-            dump($stub->columns->toJson());
             $stub->setOptions($this->option());
             $stub->setModelClassName($this->class_name);
             $stub->setModelNamespace($this->getNamespaceFromPath($this->getComponentPath('model', $table)));
