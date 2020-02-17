@@ -25,6 +25,7 @@ class StubTest extends TestCase
         $this->stub->setModelClassName('Person');
         $this->stub->setConnection('mysql');
         $this->model = $this->stub->model('app\Person.php');
+        $this->nova = $this->stub->nova('app\Nova\Person.php');
         $this->factory = $this->stub->factory('database/factories/PersonFactory.php');
         $this->migration = $this->stub->migration('database/migrations/0000_00_00_000000_create_people_table.php');
     }
@@ -47,8 +48,7 @@ class StubTest extends TestCase
 
     public function testMigration()
     {
-
-
+        $this->assertStringContainsString('Schema::connection(\'mysql\')->create(\'people\', function (Blueprint $table) {', $this->migration);
     }
 
     public function testModel()
@@ -61,7 +61,12 @@ class StubTest extends TestCase
 
     public function testFactory()
     {
+        $this->assertStringContainsString('$factory->define(Person::class, function (Faker $faker) {', $this->factory);
+    }
 
+    public function testNova()
+    {
+        $this->assertStringContainsString('public static $model = \'App\Person\';', $this->nova);
     }
 
     public function testSetSoftDeletes()
