@@ -81,7 +81,6 @@ class StubTest extends TestCase
         $this->assertTrue($this->stub->assign['soft_deletes']);
     }
 
-
     public function testSetConnection()
     {
         $this->assertSame('mysql', $this->stub->assign['connection']);
@@ -94,7 +93,6 @@ class StubTest extends TestCase
 
     public function testSetOptions()
     {
-
         $ts = Carbon::parse('now');
         $this->stub->setOptions(['created_at' => $ts]);
         $this->assertSame($ts, $this->stub->assign['created_at']);

@@ -10,7 +10,6 @@ use Laravelizer\Stub;
 
 class Laravelize extends Command
 {
-
     protected $signature = 'laravelize
                             {table=___*___}
                             {--connection=}
@@ -28,12 +27,10 @@ class Laravelize extends Command
     protected $force;
     protected $written;
 
-
     public function __construct()
     {
         parent::__construct();
         $this->written = collect([]);
-
     }
 
     public function handle()
@@ -41,7 +38,6 @@ class Laravelize extends Command
         $this->connection = $this->hasOption('connection') && !empty($this->option('connection')) ? $this->option('connection') : config('database.default');
         $this->force = $this->hasOption('force') && !empty($this->option('force'));
         $this->tables = $this->argument('table') === '___*___' ? $this->getAllTableNames() : [$this->argument('table')];
-
 
         foreach ($this->tables as $table) {
             if ($table !== 'migrations') {
@@ -52,22 +48,21 @@ class Laravelize extends Command
 
     public function laravelize($table)
     {
-        $this->class_name = $this->ask('What do you want to call the model we are creating from table ' . $table . '?', Str::singular(Str::studly($table)));
+        $this->class_name = $this->ask('What do you want to call the model we are creating from table '.$table.'?', Str::singular(Str::studly($table)));
 
         foreach ($this->components as $component) {
-            if (config('laravelizer.' . $component . '.suppress')) {
-                $this->line('<fg=yellow;options=bold>' . ucfirst($component) . ' Skipped: </>' . $this->getComponentPath($component, $table));
+            if (config('laravelizer.'.$component.'.suppress')) {
+                $this->line('<fg=yellow;options=bold>'.ucfirst($component).' Skipped: </>'.$this->getComponentPath($component, $table));
                 continue;
             }
             if (file_exists($this->getComponentPath($component, $table)) && !$this->force) {
-                $this->line('<fg=red;options=bold>' . ucfirst($component) . ' Already Exists: </>' . $this->getComponentPath($component, $table));
+                $this->line('<fg=red;options=bold>'.ucfirst($component).' Already Exists: </>'.$this->getComponentPath($component, $table));
                 continue;
             }
-            $this->line('<fg=green;options=bold>' . ucfirst($component) . ' Written: </>' . $this->getComponentPath($component, $table));
+            $this->line('<fg=green;options=bold>'.ucfirst($component).' Written: </>'.$this->getComponentPath($component, $table));
 
             $stub = new Stub();
             $db = new Database($this->connection);
-
 
             $stub->setTable($table);
             $stub->setConnection($this->connection);
@@ -77,17 +72,11 @@ class Laravelize extends Command
             $stub->setModelNamespace($this->getNamespaceFromPath($this->getComponentPath('model', $table)));
             $stub->setSoftDeletes($stub->columns->contains('deleted_at'));
 
-
-
             $fs = new Filesystem();
             $fs->write($this->getComponentPath($component, $table), $stub->$component($this->getComponentPath($component, $table)));
             $this->written->push($this->getComponentPath($component, $table));
-
         }
-
-
     }
-
 
     protected function getAllTableNames()
     {
@@ -99,11 +88,11 @@ class Laravelize extends Command
     protected function getComponentPaths($component, $table)
     {
         return [
-            'model' => config('laravelizer.' . $component . '.path') . DIRECTORY_SEPARATOR . $this->class_name . '.php',
-            'migration' => config('laravelizer.' . $component . '.path') . DIRECTORY_SEPARATOR . date('Y_m_d_Hms') . '_create_' . $table . '_table.php',
-            'factory' => config('laravelizer.' . $component . '.path') . DIRECTORY_SEPARATOR . $this->class_name . 'Factory.php',
-            'nova' => config('laravelizer.' . $component . '.path') . DIRECTORY_SEPARATOR . $this->class_name . '.php',
-            'test' => config('laravelizer.' . $component . '.path') . DIRECTORY_SEPARATOR . $this->class_name . 'Test.php',
+            'model'     => config('laravelizer.'.$component.'.path').DIRECTORY_SEPARATOR.$this->class_name.'.php',
+            'migration' => config('laravelizer.'.$component.'.path').DIRECTORY_SEPARATOR.date('Y_m_d_Hms').'_create_'.$table.'_table.php',
+            'factory'   => config('laravelizer.'.$component.'.path').DIRECTORY_SEPARATOR.$this->class_name.'Factory.php',
+            'nova'      => config('laravelizer.'.$component.'.path').DIRECTORY_SEPARATOR.$this->class_name.'.php',
+            'test'      => config('laravelizer.'.$component.'.path').DIRECTORY_SEPARATOR.$this->class_name.'Test.php',
         ];
     }
 
@@ -115,11 +104,12 @@ class Laravelize extends Command
     protected function getNamespaceFromPath($path, $root = null): string
     {
         $path = str_replace(base_path(), '', $path);
-        $path = substr($path, 0, strrpos( $path, '/'));
+        $path = substr($path, 0, strrpos($path, '/'));
         $ns = is_null($root) ? [] : [$root];
         foreach (explode('/', $path) as $k) {
             array_push($ns, Str::studly($k));
         }
-        return trim(join('\\', $ns), '\\');
+
+        return trim(implode('\\', $ns), '\\');
     }
 }

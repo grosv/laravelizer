@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Laravelizer;
 
 use ColumnClassifier\Classifier;
@@ -10,31 +9,29 @@ use Illuminate\Support\Str;
 
 class Factory
 {
-
     protected $column;
     protected $name;
     protected $sample;
 
     protected $classified = [
-        'first_name' => 'firstName',
-        'last_name' => 'lastName',
-        'full_name' => 'name',
-        'phone' => 'phoneNumber',
-        'email' => 'email',
-        'city' => 'city',
-        'state' => 'state',
-        'state_abbr' => 'stateAbbr',
-        'zip_code' => 'zipcode',
-        'country' => 'country',
+        'first_name'   => 'firstName',
+        'last_name'    => 'lastName',
+        'full_name'    => 'name',
+        'phone'        => 'phoneNumber',
+        'email'        => 'email',
+        'city'         => 'city',
+        'state'        => 'state',
+        'state_abbr'   => 'stateAbbr',
+        'zip_code'     => 'zipcode',
+        'country'      => 'country',
         'country_code' => 'countryCode',
-        'currency' => 'currencyCode',
-        'company' => 'companyName',
-        'job_title' => 'jobTitle',
-        'sentence' => 'sentence',
-        'paragraph' => 'paragraph',
-        'html' => 'html',
-        'word' => 'word',
-
+        'currency'     => 'currencyCode',
+        'company'      => 'companyName',
+        'job_title'    => 'jobTitle',
+        'sentence'     => 'sentence',
+        'paragraph'    => 'paragraph',
+        'html'         => 'html',
+        'word'         => 'word',
 
     ];
 
@@ -46,13 +43,9 @@ class Factory
 
     public function execute()
     {
-
-
         $type = $this->column['type'];
 
         return method_exists($this, $type) ? $this->$type() : $this->missingTypeMethod();
-
-
     }
 
     public function string()
@@ -87,8 +80,7 @@ class Factory
 
         $classifier = new Classifier($this->getSample());
 
-        return '$faker->' . $this->classified[(string)$classifier->execute() ?? 'word'];
-
+        return '$faker->'.$this->classified[(string) $classifier->execute() ?? 'word'];
     }
 
     public function simple_array()
@@ -113,17 +105,17 @@ class Factory
 
     public function smallint()
     {
-        return '$faker->numberBetween(' . min($this->getSample()->toArray()) . ', ' . max($this->getSample()->toArray()) . ')';
+        return '$faker->numberBetween('.min($this->getSample()->toArray()).', '.max($this->getSample()->toArray()).')';
     }
 
     public function integer()
     {
-        return '$faker->numberBetween(' . min($this->getSample()->toArray()) . ', ' . max($this->getSample()->toArray()) . ')';
+        return '$faker->numberBetween('.min($this->getSample()->toArray()).', '.max($this->getSample()->toArray()).')';
     }
 
     public function bigint()
     {
-        return '$faker->numberBetween(' . min($this->getSample()->toArray()) . ', ' . max($this->getSample()->toArray()) . ')';
+        return '$faker->numberBetween('.min($this->getSample()->toArray()).', '.max($this->getSample()->toArray()).')';
     }
 
     public function blob()
@@ -133,8 +125,9 @@ class Factory
 
     public function enum()
     {
-        $array = join('","', $this->getSample()->toArray());
-        return '$faker->randomElement([" ' . $array . '"])';
+        $array = implode('","', $this->getSample()->toArray());
+
+        return '$faker->randomElement([" '.$array.'"])';
     }
 
     public function datetime()
@@ -152,7 +145,7 @@ class Factory
         $exp = $this->column['scale'] - $this->column['precision'];
         $max = pow(10, $exp) - 1;
 
-        return '$faker->randomFloat(' . $this->column['scale'] . ', 0, ' . $max . ')';
+        return '$faker->randomFloat('.$this->column['scale'].', 0, '.$max.')';
     }
 
     public function decimal()
@@ -160,7 +153,7 @@ class Factory
         $exp = $this->column['precision'] - $this->column['scale'];
         $max = pow(10, $exp) - 1;
 
-        return '$faker->randomFloat(' . $this->column['scale'] . ', 0, ' . $max . ')';
+        return '$faker->randomFloat('.$this->column['scale'].', 0, '.$max.')';
     }
 
     public function getSample(): Collection
@@ -175,10 +168,8 @@ class Factory
 
     private function missingTypeMethod()
     {
-        dd('Missing a faker generator for ' . $this->column['type']);
+        dd('Missing a faker generator for '.$this->column['type']);
 
         return '$faker->word';
     }
-
-
 }

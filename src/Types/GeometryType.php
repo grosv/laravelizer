@@ -2,12 +2,11 @@
 
 namespace Laravelizer\Types;
 
-use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
+use Doctrine\DBAL\Types\Type;
 
 class GeometryType extends Type
 {
-
     const GEOMETRY = 'geometry';
 
     public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
