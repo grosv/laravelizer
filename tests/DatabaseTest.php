@@ -7,25 +7,24 @@ use Laravelizer\Database;
 
 class DatabaseTest extends TestCase
 {
-    protected $tables = ["actor","address","category","city","country","customer","film","film_actor","film_category","film_text","inventory","language","payment","rental","staff","store"];
+    protected $tables = ['actor', 'address', 'category', 'city', 'country', 'customer', 'film', 'film_actor', 'film_category', 'film_text', 'inventory', 'language', 'payment', 'rental', 'staff', 'store'];
+
     public function setUp(): void
     {
         parent::setUp();
-
     }
+
     /**
      * @test
      * @group db
      */
     public function can_list_database_tables()
     {
-
         $database = new Database('sakila');
 
         $this->assertEquals($this->tables, $database->getTables());
-
-
     }
+
     /**
      * @test
      * @group db
