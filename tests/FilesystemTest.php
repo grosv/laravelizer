@@ -20,23 +20,20 @@ class FilesystemTest extends TestCase
     {
         $this->assertDirectoryNotExists(config('laravelizer.model.path'));
         $write = new Filesystem();
-        $write->ensureDirectoryExists(config('laravelizer.model.path') . '/is_file.txt');
+        $write->ensureDirectoryExists(config('laravelizer.model.path').'/is_file.txt');
         $this->assertDirectoryExists(config('laravelizer.model.path'));
     }
 
     /** @test */
     public function can_write_file()
     {
-
-        $this->assertFileNotExists(config('laravelizer.model.path') . '/is_file.txt');
+        $this->assertFileNotExists(config('laravelizer.model.path').'/is_file.txt');
         $fs = new FileSystem();
 
-        $fs->write(config('laravelizer.model.path') . '/is_file.txt', 'Hello');
+        $fs->write(config('laravelizer.model.path').'/is_file.txt', 'Hello');
 
-        $this->assertFileExists(config('laravelizer.model.path') . '/is_file.txt');
+        $this->assertFileExists(config('laravelizer.model.path').'/is_file.txt');
 
-        $this->assertSame('Hello', $fs->read(config('laravelizer.model.path') . '/is_file.txt'));
-
+        $this->assertSame('Hello', $fs->read(config('laravelizer.model.path').'/is_file.txt'));
     }
-
 }

@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Laravelizer;
-
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\View;
@@ -16,17 +14,16 @@ class Stub
     public function __construct()
     {
         $this->assign = [
-            'php_open' => '<?php',
-            'casts' => [],
-            'attributes' => [],
+            'php_open'         => '<?php',
+            'casts'            => [],
+            'attributes'       => [],
             'add_soft_deletes' => false,
-            'add_timestamps' => false,
-            'soft_deletes' => false,
-            'timestamps' => false,
-            'connection' => '',
-            'table' => '',
+            'add_timestamps'   => false,
+            'soft_deletes'     => false,
+            'timestamps'       => false,
+            'connection'       => '',
+            'table'            => '',
         ];
-
     }
 
     public function model($path): string
@@ -40,12 +37,13 @@ class Stub
                 $this->assign['attributes'][$k] = '{}';
             }
         }
+
         return $this->build('model');
     }
 
     public function migration($path): string
     {
-        $this->assign['class_name'] = 'Create' . Str::studly($this->assign['table']) . 'Table';
+        $this->assign['class_name'] = 'Create'.Str::studly($this->assign['table']).'Table';
         $created_at = $updated_at = $soft_deletes = false;
         foreach ($this->columns as $column) {
             if ($column['name'] == 'deleted_at') {
@@ -61,13 +59,11 @@ class Stub
 
         $this->assign['timestamps'] = $updated_at && $created_at;
 
-
         return $this->build('migration');
     }
 
     public function factory($path): string
     {
-
         return $this->build('factory');
     }
 
@@ -126,8 +122,7 @@ class Stub
     public function build($component): string
     {
         $this->share();
+
         return view(config('laravelizer.'.$component.'.stub'));
     }
-
-
 }
