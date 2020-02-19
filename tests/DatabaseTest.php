@@ -21,8 +21,9 @@ class DatabaseTest extends TestCase
     public function can_list_database_tables()
     {
         $database = new Database('sakila');
-
-        $this->assertEquals($this->tables, $database->getTables());
+        foreach ($this->tables as $table) {
+            $this->assertContains($table, $database->getTables());
+        }
     }
 
     /**

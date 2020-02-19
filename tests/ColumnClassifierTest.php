@@ -14,6 +14,7 @@ class ColumnClassifierTest extends TestCase
         $this->classifier = new Classifier(collect(['Edward', 'Justine', 'Milo']));
     }
 
+    /** @group always */
     public function testClassifier()
     {
         $this->assertEquals('first_name', $this->classifier->execute());
