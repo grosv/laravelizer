@@ -19,13 +19,16 @@ class TestCase extends BaseTestCase
             $this->resetFileSystem();
         });
 
-        Config::set('database.connections.chipperci.driver', 'mysql');
-        Config::set('database.connections.chipperci.username', 'chipperci');
-        Config::set('database.connections.chipperci.password', 'secret');
-        Config::set('database.connections.chipperci.host', '127.0.0.1');
-        Config::set('database.connections.chipperci.port', '3306');
-        Config::set('database.connections.chipperci.database', 'chipperci');
-        Config::set('database.default', 'chipperci');
+
+        if (!isset($_ENV['IS_CHIPPER'])) {
+            Config::set('database.connections.chipperci.driver', 'mysql');
+            Config::set('database.connections.chipperci.username', 'chipperci');
+            Config::set('database.connections.chipperci.password', 'secret');
+            Config::set('database.connections.chipperci.host', '127.0.0.1');
+            Config::set('database.connections.chipperci.port', '3306');
+            Config::set('database.connections.chipperci.database', 'chipperci');
+            Config::set('database.default', 'chipperci');
+        }
     }
 
     public function resetFileSystem()
