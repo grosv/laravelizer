@@ -12,6 +12,8 @@ class DatabaseTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
+        exec('mysql chipperci < tests/sakila-db/sakila-schema.sql');
+        exec('mysql chipperci < tests/sakila-db/sakila-data.sql');
     }
 
     /**
@@ -20,7 +22,7 @@ class DatabaseTest extends TestCase
      */
     public function can_list_database_tables()
     {
-        $database = new Database('sakila');
+        $database = new Database('chipperci');
         foreach ($this->tables as $table) {
             $this->assertContains($table, $database->getTables());
         }
@@ -32,7 +34,7 @@ class DatabaseTest extends TestCase
      */
     public function can_list_table_column_names()
     {
-        $database = new Database('sakila');
+        $database = new Database('chipperci');
 
         $this->assertEquals(['actor_id', 'first_name', 'last_name', 'last_update'], $database->getColumnNames('actor'));
     }
@@ -43,7 +45,7 @@ class DatabaseTest extends TestCase
      */
     public function can_identify_column_types()
     {
-        $database = new Database('sakila');
+        $database = new Database('chipperci');
 
         $this->assertInstanceOf(Collection::class, $database->getColumns($this->tables[array_rand($this->tables)]));
     }
@@ -54,7 +56,7 @@ class DatabaseTest extends TestCase
      */
     public function can_get_foreign_key_contraints()
     {
-        $database = new Database('sakila');
+        $database = new Database('chipperci');
 
         $this->assertInstanceOf(Collection::class, $database->getForeignKeyRestraints($this->tables[array_rand($this->tables)]));
     }
