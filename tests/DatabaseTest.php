@@ -22,7 +22,7 @@ class DatabaseTest extends TestCase
      */
     public function can_list_database_tables()
     {
-        $database = new Database('chipperci');
+        $database = new Database(config('database.default'));
         foreach ($this->tables as $table) {
             $this->assertContains($table, $database->getTables());
         }
@@ -34,7 +34,7 @@ class DatabaseTest extends TestCase
      */
     public function can_list_table_column_names()
     {
-        $database = new Database('chipperci');
+        $database = new Database(config('database.default'));
 
         $this->assertEquals(['actor_id', 'first_name', 'last_name', 'last_update'], $database->getColumnNames('actor'));
     }
@@ -45,7 +45,7 @@ class DatabaseTest extends TestCase
      */
     public function can_identify_column_types()
     {
-        $database = new Database('chipperci');
+        $database = new Database(config('database.default'));
 
         $this->assertInstanceOf(Collection::class, $database->getColumns($this->tables[array_rand($this->tables)]));
     }
@@ -56,7 +56,7 @@ class DatabaseTest extends TestCase
      */
     public function can_get_foreign_key_contraints()
     {
-        $database = new Database('chipperci');
+        $database = new Database(config('database.default'));
 
         $this->assertInstanceOf(Collection::class, $database->getForeignKeyRestraints($this->tables[array_rand($this->tables)]));
     }
