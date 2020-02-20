@@ -4,7 +4,6 @@ namespace Tests;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\File;
 use Laravelizer\Database;
 
 class DatabaseTest extends TestCase
@@ -17,7 +16,6 @@ class DatabaseTest extends TestCase
 
         exec('mysql chipperci < tests/sakila-db/sakila-schema.sql');
         exec('mysql chipperci < tests/sakila-db/sakila-data.sql');
-
     }
 
     /**
