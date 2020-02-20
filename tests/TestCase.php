@@ -18,6 +18,12 @@ class TestCase extends BaseTestCase
         $this->beforeApplicationDestroyed(function () {
             $this->resetFileSystem();
         });
+
+
+        Config::set('database.connections.mysql.database', 'chipperci');
+        Config::set('database.connections.mysql.username', 'chipperci');
+        Config::set('database.connections.mysql.password', 'secret');
+
     }
 
     public function resetFileSystem()

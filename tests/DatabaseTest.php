@@ -14,6 +14,9 @@ class DatabaseTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
+
+
+
         DB::connection(config('database.default'))->raw(File::get('tests/sakila-db/sakila-schema.sql'));
         DB::connection(config('database.default'))->raw(File::get('tests/sakila-db/sakila-data.sql'));
     }
