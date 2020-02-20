@@ -15,10 +15,9 @@ class DatabaseTest extends TestCase
     {
         parent::setUp();
 
+        exec('mysql chipperci < tests/sakila-db/sakila-schema.sql');
+        exec('mysql chipperci < tests/sakila-db/sakila-data.sql');
 
-
-        DB::connection(config('database.default'))->raw(File::get('tests/sakila-db/sakila-schema.sql'));
-        DB::connection(config('database.default'))->raw(File::get('tests/sakila-db/sakila-data.sql'));
     }
 
     /**
