@@ -6,7 +6,10 @@ use Laravelizer\Filesystem;
 
 class FilesystemTest extends TestCase
 {
-    /** @test */
+    /**
+     * @test
+     * @group always
+     */
     public function can_create_directory()
     {
         $this->assertDirectoryNotExists(config('laravelizer.model.path'));
@@ -15,7 +18,10 @@ class FilesystemTest extends TestCase
         $this->assertDirectoryExists(config('laravelizer.model.path'));
     }
 
-    /** @test */
+    /**
+     * @test
+     * @group always
+     */
     public function can_create_directory_from_filename()
     {
         $this->assertDirectoryNotExists(config('laravelizer.model.path'));
@@ -24,7 +30,10 @@ class FilesystemTest extends TestCase
         $this->assertDirectoryExists(config('laravelizer.model.path'));
     }
 
-    /** @test */
+    /**
+     * @test
+     * @group always
+     */
     public function can_write_file()
     {
         $this->assertFileNotExists(config('laravelizer.model.path').'/is_file.txt');

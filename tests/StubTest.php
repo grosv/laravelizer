@@ -30,27 +30,31 @@ class StubTest extends TestCase
         $this->migration = $this->stub->migration('database/migrations/0000_00_00_000000_create_people_table.php');
     }
 
-    /** @test */
+    /** @group always */
     public function testSetTable()
     {
         $this->assertSame('people', $this->stub->assign['table']);
     }
 
+    /** @group always */
     public function testSetModelNamespace()
     {
         $this->assertSame('App', $this->stub->assign['model_namespace']);
     }
 
+    /** @group always */
     public function testSetColumns()
     {
         $this->assertEquals(collect(json_decode($this->columns_json, true)), $this->stub->assign['columns']);
     }
 
+    /** @group always */
     public function testMigration()
     {
         $this->assertStringContainsString('Schema::connection(\'mysql\')->create(\'people\', function (Blueprint $table) {', $this->migration);
     }
 
+    /** @group always */
     public function testModel()
     {
         $this->assertStringContainsString('class Person extends Model', $this->model);
@@ -59,16 +63,19 @@ class StubTest extends TestCase
         $this->assertStringContainsString('protected $connection = "mysql"', $this->model);
     }
 
+    /** @group always */
     public function testFactory()
     {
         $this->assertStringContainsString('$factory->define(Person::class, function (Faker $faker) {', $this->factory);
     }
 
+    /** @group always */
     public function testNova()
     {
         $this->assertStringContainsString('public static $model = \'App\Person\';', $this->nova);
     }
 
+    /** @group always */
     public function testSetSoftDeletes()
     {
         $this->stub->setSoftDeletes(0);
@@ -81,16 +88,19 @@ class StubTest extends TestCase
         $this->assertTrue($this->stub->assign['soft_deletes']);
     }
 
+    /** @group always */
     public function testSetConnection()
     {
         $this->assertSame('mysql', $this->stub->assign['connection']);
     }
 
+    /** @group always */
     public function testSetModelClassName()
     {
         $this->assertSame('Person', $this->stub->assign['model_name']);
     }
 
+    /** @group always */
     public function testSetOptions()
     {
         $ts = Carbon::parse('now');

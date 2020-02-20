@@ -19,13 +19,9 @@ class TestCase extends BaseTestCase
             $this->resetFileSystem();
         });
 
-        Config::set('database.connections.sakila.driver', 'mysql');
-        Config::set('database.connections.sakila.username', 'root');
-        Config::set('database.connections.sakila.password', '');
-        Config::set('database.connections.sakila.host', '127.0.0.1');
-        Config::set('database.connections.sakila.port', '3306');
-        Config::set('database.connections.sakila.database', 'sakila');
-        Config::set('database.default', 'sakila');
+        Config::set('database.connections.mysql.database', 'chipperci');
+        Config::set('database.connections.mysql.username', 'chipperci');
+        Config::set('database.connections.mysql.password', 'secret');
     }
 
     public function resetFileSystem()
