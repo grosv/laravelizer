@@ -19,8 +19,16 @@ class TestCase extends BaseTestCase
             $this->resetFileSystem();
         });
 
-
-        if (!isset($_ENV['IS_CHIPPER'])) {
+        if (isset($_ENV['IS_CHIPPER'])) {
+            Config::set('database.connections.mysql.driver', 'mysql');
+            Config::set('database.connections.mysql.username', 'chipperci');
+            Config::set('database.connections.mysql.password', 'secret');
+            Config::set('database.connections.mysql.host', 'mysql');
+            Config::set('database.connections.mysql.port', '3306');
+            Config::set('database.connections.mysql.database', 'chipperci');
+            Config::set('database.default', 'mysql');
+        }
+        else {
             Config::set('database.connections.sakila.driver', 'mysql');
             Config::set('database.connections.sakila.username', 'root');
             Config::set('database.connections.sakila.host', '127.0.0.1');
