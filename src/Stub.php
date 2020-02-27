@@ -72,6 +72,11 @@ class Stub
         return $this->build('nova');
     }
 
+    public function test($path)
+    {
+        return $this->build('test');
+    }
+
     public function setTable($table): void
     {
         $this->assign['table'] = $table;

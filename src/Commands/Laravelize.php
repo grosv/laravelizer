@@ -7,13 +7,13 @@ use Illuminate\Support\Str;
 use Laravelizer\Database;
 use Laravelizer\Filesystem;
 use Laravelizer\Stub;
+use PhpSchool\CliMenu\CliMenu;
 
 class Laravelize extends Command
 {
     protected $signature = 'laravelize
                             {table=___*___}
                             {--connection=}
-                            {--force}
                             {--updated_at=}
                             {--created_at=}
                             {--add_timestamps}
@@ -26,11 +26,23 @@ class Laravelize extends Command
     protected $connection;
     protected $force;
     protected $written;
+    protected $skipped;
+    protected $config;
+
+    protected $colors = [
+        'normal' => ['fg_color' => 'green', 'bg_color' => 'black'],
+        'warning' => ['fg_color' => 'black', 'bg_color' => 'yellow'],
+        'error' => ['fg_color' => 'black', 'bg_color' => 'red'],
+    ];
+    protected $fg_color = 'green';
+    protected $bg_color = 'black';
 
     public function __construct()
     {
         parent::__construct();
         $this->written = collect([]);
+        $this->skipped = collect([]);
+        $this->config = config('laravelizer');
     }
 
     public function handle()
@@ -39,27 +51,92 @@ class Laravelize extends Command
         $this->force = $this->hasOption('force') && !empty($this->option('force'));
         $this->tables = $this->argument('table') === '___*___' ? $this->getAllTableNames() : [$this->argument('table')];
 
+        $useconfig = $this->menu('Welcome to Laravelizer!')
+            ->setForegroundColour($this->colors['normal']['fg_color'])
+            ->setBackgroundColour($this->colors['normal']['bg_color'])
+            ->addStaticItem('We will now walk you through getting ' . $this->connection. ' set up for Laravel.')
+            ->addLineBreak(' ', 2)
+            ->addStaticItem('Use your keyboard because your mouse will not work here.')
+            ->addLineBreak(' ', 2)
+            ->addOption('default', 'Just use the really well thought out default settings (Recommended)')
+            ->addOption('custom', 'Customize settings')
+            ->disableDefaultItems()
+            ->open();
+
+        $callable = function (CliMenu $menu) {
+            $this->config[Str::singular(strtolower($menu->getSelectedItem()->getText()))]['build'] = !$this->config[Str::singular(strtolower($menu->getSelectedItem()->getText()))]['build'];
+        };
+
+        $this->menu('What type of components do you want to build?')
+            ->setForegroundColour($this->colors['normal']['fg_color'])
+            ->setBackgroundColour($this->colors['normal']['bg_color'])
+            ->addStaticItem('Models (Required)')
+            ->addCheckboxItem('Migrations', $callable)
+            ->addCheckboxItem('Factories', $callable)
+            ->addCheckboxItem('Nova', $callable)
+            ->addCheckboxItem('Tests', $callable)
+            ->addLineBreak(' ', 2)
+            ->setExitButtonText('Start Laravelizing!')
+            ->open();
+
+
         foreach ($this->tables as $table) {
             if ($table !== 'migrations') {
+
                 $this->laravelize($table);
             }
         }
+
+        $this->info('All done!');
     }
 
     public function laravelize($table)
     {
-        $this->class_name = $this->ask('What do you want to call the model we are creating from table '.$table.'?', Str::singular(Str::studly($table)));
+        $this->class_name = $this->menu('What do you want to call the model for table ' . $table . '?')
+            ->setForegroundColour($this->colors['normal']['fg_color'])
+            ->setBackgroundColour($this->colors['normal']['bg_color'])
+            ->addOption(Str::studly(Str::singular($table)), Str::studly(Str::singular($table)))
+            ->addQuestion('Something Else', 'Model Name')
+            ->disableDefaultItems()
+            ->open();
 
         foreach ($this->components as $component) {
-            if (config('laravelizer.'.$component.'.suppress')) {
-                $this->line('<fg=yellow;options=bold>'.ucfirst($component).' Skipped: </>'.$this->getComponentPath($component, $table));
+            if (!$this->config[$component]['build']) {
+                $this->written->push([
+                    'table' => $table,
+                    'component' => ucfirst($component),
+                    'path' =>  $this->getComponentPath($component, $table),
+                    'result' => 'Skipped'
+                ]);
                 continue;
             }
             if (file_exists($this->getComponentPath($component, $table)) && !$this->force) {
-                $this->line('<fg=red;options=bold>'.ucfirst($component).' Already Exists: </>'.$this->getComponentPath($component, $table));
-                continue;
+                $force = $this->menu('File Already Exists!')
+                    ->setForegroundColour($this->colors['warning']['fg_color'])
+                    ->setBackgroundColour($this->colors['warning']['bg_color'])
+                    ->addStaticItem(ucfirst($component) . ' already exists at ' . $this->getComponentPath($component, $table))
+                    ->addLineBreak(' ', 2)
+                    ->addOption('skip', 'Skip')
+                    ->addOption('force', 'Replace')
+                    ->disableDefaultItems()
+                    ->open();
+
+                if ($force === 'skip') {
+                    $this->written->push([
+                        'table' => $table,
+                        'component' => ucfirst($component),
+                        'path' =>  $this->getComponentPath($component, $table),
+                        'result' => 'Skipped'
+                    ]);
+                    continue;
+                }
             }
-            $this->line('<fg=green;options=bold>'.ucfirst($component).' Written: </>'.$this->getComponentPath($component, $table));
+            $this->written->push([
+                'table' => $table,
+                'component' => ucfirst($component),
+                'path' =>  $this->getComponentPath($component, $table),
+                'result' => 'Written'
+            ]);
 
             $stub = new Stub();
             $db = new Database($this->connection);
@@ -74,9 +151,11 @@ class Laravelize extends Command
 
             $fs = new Filesystem();
             $fs->write($this->getComponentPath($component, $table), $stub->$component($this->getComponentPath($component, $table)));
-            $this->written->push($this->getComponentPath($component, $table));
+
         }
     }
+
+
 
     protected function getAllTableNames()
     {
@@ -95,6 +174,8 @@ class Laravelize extends Command
             'test'      => config('laravelizer.'.$component.'.path').DIRECTORY_SEPARATOR.$this->class_name.'Test.php',
         ];
     }
+
+
 
     protected function getComponentPath($component, $table)
     {
