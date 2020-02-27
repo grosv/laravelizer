@@ -16,11 +16,19 @@
     "illuminate/filesystem": "^6.0",
     "doctrine/dbal": "^2.10",
     "edgrosvenor/column-classifier": "^1.0",
-    "ext-json": "*"
+    "ext-json": "*",
+    "nunomaduro/laravel-console-menu": "dev-master",
+    "edgrosvenor/php-clipboard": "^0.2.0"
   },
   "require-dev": {
     "orchestra/testbench": "^4.5"
   },
+  "repositories": [
+    {
+      "type": "path",
+      "url": "../../../Packages/edgrosvenor/*"
+    }
+  ],
   "autoload": {
     "psr-4": {
       "Laravelizer\\": "src/"

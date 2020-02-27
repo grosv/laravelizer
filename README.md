@@ -16,19 +16,16 @@ composer require edgrosvenor/laravelizer --dev
 ```
 
 ## Configuration
-By default, models will be created in your app root, factories in database/factories, and migrations in database/migrations. Optionally Nova resources can be added at app/Nova and tests can be generated at tests/unit/. You can choose whether to disable any of these or change the paths at which they're created by publishing `php artisan vendor:publish` and editing config/laravelizer.php.
-
-When you publish assets, the stubs used for each component are also published. We use blade templates for our stubs so they are pretty easy to edit if you want to change things up a bit.
+We use the bog standard Laravel paths and naming conventions as defaults for everything. You will be given an option to customize the configuration when you run the command. This just involves pasting a few lines into your .env and editing them before running the command again. But almost nobody will need to customize their paths unless they're splitting their apps into domains or (in my frequent use case) generating these components into a package instead of the Laravel installation that's running the command.
 
 ## Usage
 
 ```bash
-php artisan laravelize {table_name?} {--connection=} {--force}
+php artisan laravelize {table_name?} {--connection=}
 ```
 If you do not specify a table name, we'll just do all of them.
 
 ### Options
-`--force` Overwrite any existing files related to the table.
 `--connection=` Name of the database connection you want to use if not the default connection.
 
 ## Contributing
